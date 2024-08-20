@@ -5,6 +5,7 @@ import { Button, Card, Divider, Searchbar, Text, useTheme } from 'react-native-p
 import { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { formatDate } from '../../utils/helper';
+import { useNewScannedItems } from '../../store/useScannedItems';
 
 type InvoiceItem = {
 	itemid: number;
@@ -54,15 +55,35 @@ function CardContent({ title, value }: { title: string; value: string }) {
 
 function InvoiceRow({ itemcode, itemdesc, qnty }: InvoiceItem) {
 	const router = useRouter();
+	const newScannedItems = useNewScannedItems((state) => state.scannedItems);
+
 	return (
-		<TouchableOpacity onPress={() => router.push(`/invoiceItemScan?partcode=${itemcode}&qty=${qnty}`)}>
-			<View style={styles.invoiceRow}>
+		<TouchableOpacity
+			onPress={() => {
+				if (newScannedItems[itemcode + '']?.length !== qnty) {
+					router.push(`/invoiceItemScan?partcode=${itemcode}&qty=${qnty}`);
+				}
+			}}>
+			<View
+				style={[
+					styles.invoiceRow,
+					{
+						backgroundColor: newScannedItems[itemcode + '']?.length !== qnty ? 'rgba(255, 255, 0, 0.2)' : 'rgba(0, 255, 0, 0.2)',
+						borderColor: newScannedItems[itemcode + '']?.length !== qnty ? 'yellow' : 'green',
+					},
+				]}>
 				<View>
 					<Text>{itemcode}</Text>
 					<Text>{itemdesc}</Text>
 				</View>
 
-				<View style={styles.qntyContainer}>
+				<View
+					style={[
+						styles.qntyContainer,
+						{
+							borderColor: newScannedItems[itemcode + '']?.length !== qnty ? 'yellow' : 'green',
+						},
+					]}>
 					<Text style={{ textAlign: 'center', fontStyle: 'italic', fontWeight: 800 }}>qty</Text>
 					<Text style={{ textAlign: 'center', paddingBottom: 2 }}>{qnty}</Text>
 				</View>
