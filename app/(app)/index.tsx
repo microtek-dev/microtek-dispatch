@@ -3,7 +3,7 @@ import { Stack, useRouter } from 'expo-router';
 import Container from '../../components/Container';
 import { Button, Card, Divider, Searchbar, Text, useTheme } from 'react-native-paper';
 import { useEffect, useMemo, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, ScrollView } from 'react-native';
 import { formatDate } from '../../utils/helper';
 import { useNewScannedItems } from '../../store/useScannedItems';
 
@@ -139,109 +139,111 @@ export default function Index() {
 	};
 
 	return (
-		<Container>
-			<Stack.Screen
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<Text
-				style={{ color: theme.colors.primary, marginBottom: 25 }}
-				variant="titleLarge">
-				Search Invoices
-			</Text>
+		<ScrollView>
+			<Container>
+				<Stack.Screen
+					options={{
+						headerShown: false,
+					}}
+				/>
+				<Text
+					style={{ color: theme.colors.primary, marginBottom: 25 }}
+					variant="titleLarge">
+					Search Invoices
+				</Text>
 
-			<Searchbar
-				placeholder="Search"
-				onChangeText={setInvoiceNum}
-				elevation={2}
-				onIconPress={async () => {
-					if (invoiceNum !== '') {
-						await searchInvoice(invoiceNum);
-					}
-				}}
-				value={invoiceNum}
-			/>
+				<Searchbar
+					placeholder="Search"
+					onChangeText={setInvoiceNum}
+					elevation={2}
+					onIconPress={async () => {
+						if (invoiceNum !== '') {
+							await searchInvoice(invoiceNum);
+						}
+					}}
+					value={invoiceNum}
+				/>
 
-			{invoiceData && (
-				<>
-					<Card style={{ marginTop: 25, paddingBottom: 15 }}>
-						<Card.Title
-							title="Invoice details"
-							titleStyle={{
-								fontSize: 25,
-								paddingTop: 18,
-							}}
-						/>
+				{invoiceData && (
+					<>
+						<Card style={{ marginTop: 25, paddingBottom: 15 }}>
+							<Card.Title
+								title="Invoice details"
+								titleStyle={{
+									fontSize: 25,
+									paddingTop: 18,
+								}}
+							/>
 
-						<Divider
-							theme={{
-								colors: { primary: 'green' },
-							}}
-						/>
+							<Divider
+								theme={{
+									colors: { primary: 'green' },
+								}}
+							/>
 
-						<CardContent
-							title="Invoice number"
-							value={invoiceData?.invoiceno}
-						/>
-						<CardContent
-							title="Invoice date"
-							value={formatDate(invoiceData?.invoicedate)}
-						/>
-						<CardContent
-							title="Invoice status"
-							value={invoiceData?.invoicestatus}
-						/>
-						<CardContent
-							title="Customer code"
-							value={invoiceData?.custcode}
-						/>
-						<CardContent
-							title="Customer name"
-							value={invoiceData?.custname}
-						/>
-						<CardContent
-							title="Plant code"
-							value={invoiceData?.plantcode}
-						/>
-					</Card>
+							<CardContent
+								title="Invoice number"
+								value={invoiceData?.invoiceno}
+							/>
+							<CardContent
+								title="Invoice date"
+								value={formatDate(invoiceData?.invoicedate)}
+							/>
+							<CardContent
+								title="Invoice status"
+								value={invoiceData?.invoicestatus}
+							/>
+							<CardContent
+								title="Customer code"
+								value={invoiceData?.custcode}
+							/>
+							<CardContent
+								title="Customer name"
+								value={invoiceData?.custname}
+							/>
+							<CardContent
+								title="Plant code"
+								value={invoiceData?.plantcode}
+							/>
+						</Card>
 
-					<Card style={{ marginTop: 15, paddingBottom: 15 }}>
-						<Card.Title
-							title="Invoice items"
-							titleStyle={{
-								fontSize: 25,
-								paddingTop: 18,
-							}}
-						/>
-						<Divider
-							theme={{
-								colors: { primary: 'green' },
-							}}
-						/>
-						<View style={styles.invoiceRowContainer}>
-							{invoiceItems &&
-								invoiceItems?.slice(from, to).map((item) => (
-									<InvoiceRow
-										key={item.itemid}
-										itemcode={item.itemcode}
-										itemdesc={item.itemdesc}
-										itemid={item.itemid}
-										qnty={item.qnty}
-									/>
-								))}
-						</View>
-					</Card>
-				</>
-			)}
+						<Card style={{ marginTop: 15, paddingBottom: 15 }}>
+							<Card.Title
+								title="Invoice items"
+								titleStyle={{
+									fontSize: 25,
+									paddingTop: 18,
+								}}
+							/>
+							<Divider
+								theme={{
+									colors: { primary: 'green' },
+								}}
+							/>
+							<View style={styles.invoiceRowContainer}>
+								{invoiceItems &&
+									invoiceItems?.slice(from, to).map((item) => (
+										<InvoiceRow
+											key={item.itemid}
+											itemcode={item.itemcode}
+											itemdesc={item.itemdesc}
+											itemid={item.itemid}
+											qnty={item.qnty}
+										/>
+									))}
+							</View>
+						</Card>
+					</>
+				)}
 
-			<Button
-				mode="outlined"
-				style={{ width: '100%', marginTop: 15, borderColor: theme.colors.primary, backgroundColor: theme.colors.primary }}
-				onPress={signOut}>
-				<Text style={{ color: '#FFF' }}>Log out</Text>
-			</Button>
-		</Container>
+				<Button
+					mode="outlined"
+					style={{ width: '100%', marginTop: 15, borderColor: theme.colors.primary, backgroundColor: theme.colors.primary }}
+					onPress={signOut}>
+					<Text style={{ color: '#FFF' }}>Validate</Text>
+				</Button>
+			</Container>
+		</ScrollView>
 	);
 }
 
